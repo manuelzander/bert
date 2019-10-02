@@ -1,6 +1,5 @@
 import argparse
 import torch
-from typing import List
 from torch.utils.data import TensorDataset, DataLoader
 
 from transformers import BertConfig, BertForQuestionAnswering, BertTokenizer
@@ -110,7 +109,7 @@ def main():
 
     ans = preds[1_000_000_000]
     print(ans)
-
+    return ans
 
 
 if __name__ == "__main__":
