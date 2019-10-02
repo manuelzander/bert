@@ -13,7 +13,7 @@ app.logger.setLevel(logging.DEBUG)
 socketio = SocketIO(app, async_mode=None)
 
 # Loading the model
-model_path = '/home/patrick/bert'
+model_path = './bert'
 model, tokenizer = repl.get_model(model_path)
 
 
@@ -32,7 +32,6 @@ def handle_my_custom_event(data):
     app.logger.info('Question: ' + str(data['question']))
     app.logger.info('Context: ' + str(data['context']))
     answer = repl.ask(model, tokenizer, data["question"], data["context"])
-
     data['answer'] = answer
     app.logger.info('Answer: ' + str(data['answer']))
     socketio.emit('Response', data, callback=answer_sent())
