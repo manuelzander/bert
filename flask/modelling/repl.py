@@ -4,8 +4,8 @@ from torch.utils.data import TensorDataset, DataLoader
 
 from transformers import BertConfig, BertForQuestionAnswering, BertTokenizer
 
-from run_squad import to_list
-from utils_squad import convert_examples_to_features, SquadExample, RawResult, write_predictions
+from .run_squad import to_list
+from .utils_squad import convert_examples_to_features, SquadExample, RawResult, write_predictions
 
 
 def get_model(model_name):
