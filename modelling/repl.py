@@ -50,23 +50,15 @@ def get_features(examples, tokenizer):
     return dataset, examples, features
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--question")
-    parser.add_argument("--context")
-    args = parser.parse_args()
-
-    # load the model and the tokenizer
-    model, tokenizer = get_model("/home/patrick/projects/hackathon/berthachathon/modelling")
-
+def ask(model, tokenizer, question, context, device="cpu"):
     # create a squad example
     examples = SquadExample(
         qas_id=1000000000,
-        question_text=args.question,
-        doc_tokens=args.context.split(" ")
+        question_text=question,
+        doc_tokens=context.split(" ")
     )
 
-    # # Make features TODO
+    # # Make features TODO clean me up
     dataset, examples, features = get_features([examples], tokenizer)
 
     dataloader = DataLoader(dataset)
@@ -75,7 +67,6 @@ def main():
     model.eval()  # signal eval mode
     batch = dataloader.__iter__().__next__()
 
-    device = "cpu"
     batch = tuple(t.to(device) for t in batch)
 
     with torch.no_grad():
@@ -86,31 +77,35 @@ def main():
         }
         outputs = model(**inputs)
 
-    results = [RawResult(
-        unique_id=1_000_000_000,
-        start_logits=to_list(outputs[0][0]),
-        end_logits=to_list(outputs[1][0])
-    )]
+    results = [
+        RawResult(
+            unique_id=1_000_000_000,
+            start_logits=to_list(outputs[0][0]),
+            end_logits=to_list(outputs[1][0])
+        )
+    ]
 
     preds = write_predictions(
-        examples,
-        features,
-        results,
-        1,
-        30,
-        True,
+        examples, features, results,
+        1, 30, True,
         "outputs.json",
         "outputs_nbest.json",
         "output_null_log_odds.json",
-        True,
-        False,
-        0.0
+        True, False, 0.0
     )
 
     ans = preds[1_000_000_000]
-    print(ans)
     return ans
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--question")
+    parser.add_argument("--context")
+    args = parser.parse_args()
+
+    # load the model and the tokenizer
+    model, tokenizer = get_model("/home/patrick/projects/hackathon/berthachathon/modelling")
+
+    answer = ask(model, tokenizer, args.question, args.context)
+    print(answer)
