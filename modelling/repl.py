@@ -8,11 +8,10 @@ from transformers import BertConfig, BertForQuestionAnswering, BertTokenizer
 from run_squad import to_list
 from utils_squad import convert_examples_to_features, SquadExample, RawResult, write_predictions
 
-MODEL_NAME = "bert-base-cased"
-
 
 def get_model(model_name):
     config = BertConfig.from_pretrained(model_name)
+
     tokenizer = BertTokenizer.from_pretrained(
         model_name,
         do_lower_case=True
@@ -26,7 +25,7 @@ def get_model(model_name):
     return model, tokenizer
 
 
-def get_features(examples: List[SquadExample], tokenizer):
+def get_features(examples, tokenizer):
     features = convert_examples_to_features(
         examples=examples,
         tokenizer=tokenizer,
@@ -42,10 +41,12 @@ def get_features(examples: List[SquadExample], tokenizer):
     all_segment_ids = torch.tensor([f.segment_ids for f in features], dtype=torch.long)
     all_cls_index = torch.tensor([f.cls_index for f in features], dtype=torch.long)
     all_p_mask = torch.tensor([f.p_mask for f in features], dtype=torch.float)
-
     all_example_index = torch.arange(all_input_ids.size(0), dtype=torch.long)
-    dataset = TensorDataset(all_input_ids, all_input_mask, all_segment_ids,
-                            all_example_index, all_cls_index, all_p_mask)
+
+    dataset = TensorDataset(
+        all_input_ids, all_input_mask, all_segment_ids,
+        all_example_index, all_cls_index, all_p_mask
+    )
 
     return dataset, examples, features
 
@@ -54,48 +55,48 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--question")
     parser.add_argument("--context")
-    parser.add_argument("--model")
     args = parser.parse_args()
 
-    # load the model
-    model, tokenizer = get_model(args.model)
-    import pdb; pdb.set_trace()
-    # create a squad example
-    examples = [
-        SquadExample(
-            qas_id="repl",
-            question_text=args.question,
-            doc_tokens=args.context.split(" ")
-        )
-    ]
-    print(examples)
+    # load the model and the tokenizer
+    model, tokenizer = get_model("/home/patrick/projects/hackathon/berthachathon/modelling")
 
-    dataset, examples, features = get_features(examples, tokenizer)
+    # create a squad example
+    examples = SquadExample(
+        qas_id=1000000000,
+        question_text=args.question,
+        doc_tokens=args.context.split(" ")
+    )
+
+    # # Make features TODO
+    dataset, examples, features = get_features([examples], tokenizer)
+
     dataloader = DataLoader(dataset)
 
-    all_results = []
-    for batch in dataloader:
-        model.eval()
-        batch = tuple(t.to("cpu") for t in batch)
-        with torch.no_grad():
-            inputs = {
-                'input_ids': batch[0],
-                'attention_mask': batch[1],
-                'token_type_ids': batch[2]  # XLM don't use segment_ids
-            }
-            example_indices = batch[3]
-            outputs = model(**inputs)
+    # Run the model
+    model.eval()  # signal eval mode
+    batch = dataloader.__iter__().__next__()
 
-        for i, example_index in enumerate(example_indices):
-            eval_feature = features[example_index.item()]
-            unique_id = int(eval_feature.unique_id)
-            result = RawResult(unique_id=unique_id,
-                               start_logits=to_list(outputs[0][i]),
-                               end_logits=to_list(outputs[1][i]))
-            all_results.append(result)
+    device = "cpu"
+    batch = tuple(t.to(device) for t in batch)
+
+    with torch.no_grad():
+        inputs = {
+            'input_ids': batch[0],
+            'attention_mask': batch[1],
+            'token_type_ids': batch[2]  # XLM don't use segment_ids
+        }
+        outputs = model(**inputs)
+
+    results = [RawResult(
+        unique_id=1_000_000_000,
+        start_logits=to_list(outputs[0][0]),
+        end_logits=to_list(outputs[1][0])
+    )]
 
     preds = write_predictions(
-        examples, features, all_results,
+        examples,
+        features,
+        results,
         1,
         30,
         True,
@@ -107,7 +108,9 @@ def main():
         0.0
     )
 
-    print(preds)
+    ans = preds[1_000_000_000]
+    print(ans)
+
 
 
 if __name__ == "__main__":
