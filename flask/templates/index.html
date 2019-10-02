@@ -1,25 +1,64 @@
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <title>Bert</title>
-  </head>
-  <body>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Bert</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="http://127.0.0.1:5000/">Bert Question Answering Engine</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault"></div>
+  </nav>
+
+  <main role="main" class="flex-container">
+    <br>
     <div style="text-align: center;">
-    <form action="" method="POST">
-      <input type="text" class="question" placeholder="Question"/>
-      <input type="text" class="context" placeholder="Context"/>
-      <input type="submit"/>
-      <br>
-      <br>
-      <div class="answer_holder"></div>
-    </form>
-    <h3 style='color: #ccc;font-size: 30px;'>No questions and answers yet..</h3>
+
+      <div class="modal-body row">
+        <div class="col-md-12">
+          <br>
+
+          <h3>Hi, I'm Bert, please ask me a question...</h3>
+
+          <img id="bert" src="/static/images/bert.png">
+
+          <br>
+          <br>
+
+          <form action="" method="POST">
+            <input type="text" class="question" placeholder="Question"/>
+            <input type="text" class="context" placeholder="Context"/>
+            <input type="submit"/>
+          </form>
+
+        </div>
+
+      </div>
+
+      <div class="modal-body row">
+        <div class="col-md-12">
+            <div class="answer_holder"></div>
+            <h4>No questions and answers yet...</h4>
+        </div>
+      </div>
+
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-    <script type="text/javascript">
+  </main><!-- /.container -->
+ <script type="text/javascript">
       var socket = io.connect('http://' + document.domain + ':' + location.port);
 
       socket.on( 'connect', function() {
@@ -40,12 +79,11 @@
       socket.on( 'Response', function( msg ) {
         console.log( msg )
         if( typeof msg.question !== 'undefined' ) {
-          $( 'h3' ).remove()
+          $( 'h4' ).remove()
           $( 'div.answer_holder' ).append( '<div><b style="color: #000">' + msg.question + '</b> ' + msg.answer + '</b> ')
           $( 'div.answer_holder' ).append( '<div>' + '<br>')
         }
       })
     </script>
-
-  </body>
-  </html>
+</body>
+</html>
