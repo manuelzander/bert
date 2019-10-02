@@ -54,13 +54,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--question")
     parser.add_argument("--context")
+    parser.add_argument("--model")
     args = parser.parse_args()
 
     # load the model
-    model, tokenizer = get_model(MODEL_NAME)
+    model, tokenizer = get_model(args.model)
     import pdb; pdb.set_trace()
-
-
     # create a squad example
     examples = [
         SquadExample(
@@ -88,7 +87,6 @@ def main():
             outputs = model(**inputs)
 
         for i, example_index in enumerate(example_indices):
-
             eval_feature = features[example_index.item()]
             unique_id = int(eval_feature.unique_id)
             result = RawResult(unique_id=unique_id,
@@ -110,7 +108,6 @@ def main():
     )
 
     print(preds)
-
 
 
 if __name__ == "__main__":
