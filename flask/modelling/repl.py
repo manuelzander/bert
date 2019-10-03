@@ -51,47 +51,52 @@ def get_features(examples, tokenizer):
 
 
 def ask(model, tokenizer, question, context, device="cpu"):
+
     # create a squad example
     examples = SquadExample(
-        qas_id=1000000000,
+        qas_id=1_000_000_000,
         question_text=question,
         doc_tokens=context.split(" ")
     )
 
-    # # Make features TODO clean me up
+    # Make features TODO clean me up
     dataset, examples, features = get_features([examples], tokenizer)
-
     dataloader = DataLoader(dataset)
 
-    # Run the model
-    model.eval()  # signal eval mode
-    batch = dataloader.__iter__().__next__()
+    all_results = []
+    for batch in dataloader:
+        # Run the model
+        model.eval()  # signal eval mode
+        batch = tuple(t.to(device) for t in batch)
 
-    batch = tuple(t.to(device) for t in batch)
+        with torch.no_grad():
+            inputs = {
+                'input_ids': batch[0],
+                'attention_mask': batch[1],
+                'token_type_ids': batch[2]  # XLM don't use segment_ids
+            }
+            example_indices = batch[3]
+            outputs = model(**inputs)
 
-    with torch.no_grad():
-        inputs = {
-            'input_ids': batch[0],
-            'attention_mask': batch[1],
-            'token_type_ids': batch[2]  # XLM don't use segment_ids
-        }
-        outputs = model(**inputs)
-
-    results = [
-        RawResult(
-            unique_id=1_000_000_000,
-            start_logits=to_list(outputs[0][0]),
-            end_logits=to_list(outputs[1][0])
-        )
-    ]
+        for i, example_index in enumerate(example_indices):
+            eval_feature = features[example_index.item()]
+            unique_id = int(eval_feature.unique_id)
+            result = RawResult(unique_id=unique_id,
+                               start_logits=to_list(outputs[0][i]),
+                               end_logits=to_list(outputs[1][i]))
+            all_results.append(result)
 
     preds = write_predictions(
-        examples, features, results,
-        1, 30, True,
-        "outputs.json",
-        "outputs_nbest.json",
-        "output_null_log_odds.json",
-        True, False, 0.0
+        examples, features, all_results,
+        n_best_size=1,
+        max_answer_length=30,
+        do_lower_case=True,
+        output_prediction_file="outputs.json",
+        output_nbest_file="outputs_nbest.json",
+        output_null_log_odds_file="output_null_log_odds.json",
+        verbose_logging=True,
+        version_2_with_negative=False,
+        null_score_diff_threshold=0.0
     )
 
     ans = preds[1_000_000_000]
