@@ -4,6 +4,8 @@ import flask
 import wikipedia
 from flask import render_template
 from flask_socketio import SocketIO
+from multiprocessing import Pool
+
 
 from modelling import repl
 
@@ -21,10 +23,20 @@ model_path = './bert'
 model, tokenizer = repl.get_model(model_path)
 
 
+def summary(r):
+    return wikipedia.summary(r, sentences=NUM_SENT)
+
+
 def ask_wiki(question: str):
     results = wikipedia.search(question)
     print(results)
-    summaries = [wikipedia.summary(r, sentences=NUM_SENT) for r in results[:TOP_N]]
+
+    with Pool(processes=TOP_N) as pool:
+        summaries = pool.map(
+            func=summary,
+            iterable=results[:TOP_N]
+        )
+
     combined = " ".join(summaries)
     print(summaries)
     return combined
