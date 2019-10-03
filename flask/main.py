@@ -8,7 +8,7 @@ from flask_socketio import SocketIO
 from modelling import repl
 
 TOP_N = 3
-NUM_SENT = 5
+NUM_SENT = 10
 
 # Flask initialization
 app = flask.Flask(__name__)
