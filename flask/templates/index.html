@@ -39,8 +39,8 @@
           <br>
 
           <form action="" method="POST">
-            <input type="text" class="question" placeholder="Question"/>
-            <input type="text" class="context" placeholder="Context"/>
+            <input type="text" class="question" placeholder="Question" size="75"/>
+<!--            <input type="text" class="context" placeholder="Context"/>-->
             <input type="submit"/>
           </form>
 
@@ -66,13 +66,13 @@
         var form = $( 'form' ).on( 'submit', function( e ) {
           e.preventDefault()
           let question = $( 'input.question' ).val()
-          let context = $( 'input.context' ).val()
-          socket.emit( 'my event', {
+          // let context = $( 'input.context' ).val()
+          socket.emit( 'my_question', {
             question : question,
-            context : context
+            // context : context
           } )
           $( 'input.question' ).val( '' ).focus()
-          $( 'input.context' ).val( '' ).focus()
+          // $( 'input.context' ).val( '' ).focus()
         } )
       } )
 
@@ -80,8 +80,11 @@
         console.log( msg )
         if( typeof msg.question !== 'undefined' ) {
           $( 'h4' ).remove()
-          $( 'div.answer_holder' ).append( '<div><b style="color: #000">' + msg.question + '</b> ' + msg.answer + '</b> ')
+          $( 'div.answer_holder' ).append( '<div><b>' + msg.question )
+          $( 'div.answer_holder' ).append( '<div>' + msg.context )
           $( 'div.answer_holder' ).append( '<div>' + '<br>')
+          $( 'div.answer_holder' ).append( '<div><b>' + msg.answer )
+          $( 'div.answer_holder' ).append( '<div>' + '<hr>')
         }
       })
     </script>

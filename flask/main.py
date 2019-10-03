@@ -39,25 +39,29 @@ def answer_sent():
     app.logger.info('Answer sent...')
 
 
-@socketio.on('my event')
-def handle_my_custom_event(data):
-    app.logger.info('Question and context received...')
-    app.logger.info('Question: ' + str(data['question']))
+@socketio.on('my_question')
+def handle_my_question(data):
 
+    # get context
     context = ask_wiki(data["question"])
     context = context.split(" ")
+
+    # shorten it
     magic_number = 384 - len(data["question"].split(" ")) - 3
     context = context[:magic_number]
-    print(magic_number)
+
     data["context"] = " ".join(context)
 
+    app.logger.info('Question and context received...')
+    app.logger.info('Question: ' + str(data['question']))
     app.logger.info('Context: ' + str(data['context']))
-    answer = repl.ask(model, tokenizer, data["question"], data["context"])
-    data['answer'] = answer
+
+    data['answer'] = repl.ask(model, tokenizer, data["question"], data["context"])
+
     app.logger.info('Answer: ' + str(data['answer']))
     socketio.emit('Response', data, callback=answer_sent())
 
 
 if __name__ == '__main__':
-    app.logger.info("Start server")
+    app.logger.info("Start server...")
     socketio.run(app, debug=True)
