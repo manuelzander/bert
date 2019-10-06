@@ -1,6 +1,6 @@
 # BERT HACKATHON
 Bert QA project for internal hackathon
-# Environment Setting
+# Environment setting
 1. Clone the repo to your local machine
 2. Create environment from yaml file by running the command:
 ```conda env create -f env.yml```
@@ -9,12 +9,12 @@ Bert QA project for internal hackathon
 4. Install PyTorch in the new environment, install instruction -> https://pytorch.org/
 
 It's really a pain to include the torch in the env.yml. 
-# Download THE MODEL
+# Download the model
 The pre-trained model object can be downloaded from:
 https://drive.google.com/open?id=1UbhMvtUeX1LiRA9uDiontnOgqps1ooy5
 
 Please unzip it and replace under ./bert_hackathon/flask/ 
-# RUN THE WEB SERVICE
+# RUN the web service
 1. change the line 113 in ./bert_hackathon/flask/modelling/repl.py to point to the location of the unzipped Bert folder from previous step
 2. run ```python main.py``` from its directory level
 
