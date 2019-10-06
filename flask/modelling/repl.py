@@ -109,7 +109,7 @@ if __name__ == "__main__":
     parser.add_argument("--context")
     args = parser.parse_args()
 
-    # load the model and the tokenizer
+    # load the model and the tokenizer: change to the location of modelling folder
     model, tokenizer = get_model("/home/patrick/projects/hackathon/berthachathon/modelling")
 
     answer = ask(model, tokenizer, args.question, args.context)
