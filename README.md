@@ -9,7 +9,7 @@ Bert QA project for internal hackathon
 4. Install PyTorch in the new environment, install instruction -> https://pytorch.org/
 
 It's really a pain to include the torch in the env.yml. 
-# Download the pre-trained model
+# Download THE MODEL
 The pre-trained model object can be downloaded from:
 https://drive.google.com/open?id=1UbhMvtUeX1LiRA9uDiontnOgqps1ooy5
 
