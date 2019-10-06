@@ -14,7 +14,7 @@ The pre-trained model object can be downloaded from:
 https://drive.google.com/open?id=1UbhMvtUeX1LiRA9uDiontnOgqps1ooy5
 
 Please unzip it and replace under ./bert_hackathon/flask/ 
-# RUN the web service
+# Run the web service
 1. change the line 113 in ./bert_hackathon/flask/modelling/repl.py to point to the location of the unzipped Bert folder from previous step
 2. run ```python main.py``` from its directory level
 
