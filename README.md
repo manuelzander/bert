@@ -28,8 +28,6 @@ Then the used Python libraries/packages can be installed with:
 pip install -r requirements.txt
 ```
 
-Install PyTorch in the same environment, install instructions: https://pytorch.org/
-
 ## Download the model
 
 The pre-trained model object can be downloaded from:
