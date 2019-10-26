@@ -1,12 +1,11 @@
 import logging
-
+from multiprocessing import Pool
+import os
 import flask
 import wikipedia
+from config import ROOT_DIR, MODEL_NAME
 from flask import render_template
 from flask_socketio import SocketIO
-from multiprocessing import Pool
-
-
 from modelling import repl
 
 TOP_N = 3
@@ -19,7 +18,7 @@ app.logger.setLevel(logging.DEBUG)
 socketio = SocketIO(app, async_mode=None)
 
 # Loading the model
-model_path = './bert'
+model_path = os.path.join(ROOT_DIR, MODEL_NAME)
 model, tokenizer = repl.get_model(model_path)
 
 

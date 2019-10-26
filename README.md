@@ -40,5 +40,5 @@ Please unzip it and replace under ./bert/flask/
 
 Change the line 113 in ./bert/flask/modelling/repl.py to point to the location of the unzipped Bert folder from previous step
 
-Run ```python main.py``` inside ./bert/flask
+Run ```python flask/main.py```
 
