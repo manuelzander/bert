@@ -40,5 +40,5 @@ Create a folder ```flask/bert``` and unzip the model in there.
 
 Change line 113 in ```flask/modelling/repl.py``` to point to the location of the unzipped model folder from previous step.
 
-Run ```python flask/main.py```
+Run ```python flask/main.py``` and open http://127.0.0.1:5000/
 

@@ -1,9 +1,10 @@
 import logging
+
 # from multiprocessing import Pool
 import os
 
 import wikipedia
-from config import ROOT_DIR, MODEL_NAME, TOP_N
+from config import ROOT_DIR, MODEL_NAME, NO_ARTICLES, NO_SENTENCES
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 from modelling import repl
@@ -20,12 +21,12 @@ socketio = SocketIO(app, async_mode=None)
 
 
 def ask_wiki(question: str):
-    results = wikipedia.search(question)[:TOP_N]
+    results = wikipedia.search(question, results=NO_ARTICLES)
     app.logger.info("Wikipedia articles: %s", results)
 
     summaries = []
     for result in results:
-        summary = wikipedia.summary(result)
+        summary = wikipedia.summary(result, sentences=NO_SENTENCES)
         summaries.append(summary)
 
     # with Pool(processes=TOP_N) as pool:
@@ -52,25 +53,22 @@ def answer_sent():
 def handle_my_question(data):
 
     # Get context
-    app.logger.info("Attempting to get context...")
+    app.logger.info("SUCCESS - question received: " + str(data["question"]))
+    app.logger.info("Attempting to create context...")
+
     try:
         context = ask_wiki(data["question"])
     except Exception as e:
-        app.logger.error("ERROR - couldn't get context due to: %s", e)
-        context = "No context found"
-    else:
-        app.logger.info("SUCCESS - context loaded")
-
-    context = context.split(" ")
+        app.logger.error("ERROR - couldn't create context due to: %s", e)
+        context = "No context created"
 
     # Shorten context
+    context = context.split(" ")
     magic_number = 384 - len(data["question"].split(" ")) - 3
     context = context[:magic_number]
     data["context"] = " ".join(context)
 
-    app.logger.info("Question and context received")
-    app.logger.info("Question: " + str(data["question"]))
-    app.logger.info("Context: " + str(data["context"]))
+    app.logger.info("SUCCESS - context created: " + str(data["context"]))
     app.logger.info("Attempting to get answer...")
 
     # Get answer
@@ -79,10 +77,8 @@ def handle_my_question(data):
     except Exception as e:
         app.logger.error("ERROR - couldn't get answer due to: %s", e)
         data["answer"] = "No answer found"
-    else:
-        app.logger.info("SUCCESS - answer found")
 
-    app.logger.info("Answer: " + str(data["answer"]))
+    app.logger.info("SUCCESS - answer found: " + str(data["answer"]))
     socketio.emit("Response", data, callback=answer_sent())
 
 
