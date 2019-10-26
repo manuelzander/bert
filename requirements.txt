@@ -11,8 +11,7 @@ requests==2.22.0
 regex==2019.8.19
 sentencepiece==0.1.83
 sacremoses==0.0.34
-Flask
-flask-socketio
-eventlet
-gunicorn
-wikipedia
+Flask==1.1.1
+Flask-SocketIO==4.2.1
+eventlet==0.25.1
+wikipedia==1.4.0
