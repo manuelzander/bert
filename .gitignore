@@ -1,8 +1,11 @@
-
+# Project related
+*.DS_Store*
+flask/static/*
 flask/bert
+flask/transformers
 flask/*.json
-
 *.idea/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
