@@ -9,7 +9,6 @@ from flask_socketio import SocketIO
 from modelling import repl
 
 TOP_N = 3
-NUM_SENT = 10
 
 # Flask initialization
 app = flask.Flask(__name__)
@@ -22,22 +21,28 @@ model_path = os.path.join(ROOT_DIR, MODEL_NAME)
 model, tokenizer = repl.get_model(model_path)
 
 
-def summary(r):
-    return wikipedia.summary(r, sentences=NUM_SENT)
+# def summary(r):
+#     return wikipedia.summary(r)
 
 
 def ask_wiki(question: str):
-    results = wikipedia.search(question)
-    print(results)
+    app.logger.info("Get wikipedia topics")
+    results = wikipedia.search(question)[:TOP_N]
+    app.logger.info("Wikipedia topics: %s", results)
 
-    with Pool(processes=TOP_N) as pool:
-        summaries = pool.map(
-            func=summary,
-            iterable=results[:TOP_N]
-        )
+    summaries = []
+    for result in results:
+        summary = wikipedia.summary(result)
+        summaries.append(summary)
+
+    # with Pool(processes=TOP_N) as pool:
+    #     summaries = pool.map(
+    #         func=summary,
+    #         iterable=results[:TOP_N]
+    #     )
 
     combined = " ".join(summaries)
-    print(summaries)
+    app.logger.info("Wikipedia summaries combined")
     return combined
 
 
@@ -53,11 +58,12 @@ def answer_sent():
 @socketio.on('my_question')
 def handle_my_question(data):
 
-    # get context
+    # Get context
+    app.logger.info("Get context")
     context = ask_wiki(data["question"])
     context = context.split(" ")
 
-    # shorten it
+    # Shorten context
     magic_number = 384 - len(data["question"].split(" ")) - 3
     context = context[:magic_number]
 
