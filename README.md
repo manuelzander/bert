@@ -34,11 +34,11 @@ The pre-trained model object can be downloaded from:
 
 https://drive.google.com/open?id=1UbhMvtUeX1LiRA9uDiontnOgqps1ooy5
 
-Create a folder ```bert/flask/bert``` and unzip the model in there.
+Create a folder ```flask/bert``` and unzip the model in there.
 
 ## Running the flask server
 
-Change line 113 in ```bert/flask/modelling/repl.py``` to point to the location of the unzipped model folder from previous step.
+Change line 113 in ```flask/modelling/repl.py``` to point to the location of the unzipped model folder from previous step.
 
 Run ```python flask/main.py```
 

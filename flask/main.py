@@ -1,24 +1,18 @@
 import logging
-from multiprocessing import Pool
+# from multiprocessing import Pool
 import os
-import flask
+
 import wikipedia
-from config import ROOT_DIR, MODEL_NAME
-from flask import render_template
+from config import ROOT_DIR, MODEL_NAME, TOP_N
+from flask import Flask, render_template
 from flask_socketio import SocketIO
 from modelling import repl
 
-TOP_N = 3
-
 # Flask initialization
-app = flask.Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
+app = Flask(__name__)
+app.config["SECRET_KEY"] = "secret!"
 app.logger.setLevel(logging.DEBUG)
 socketio = SocketIO(app, async_mode=None)
-
-# Loading the model
-model_path = os.path.join(ROOT_DIR, MODEL_NAME)
-model, tokenizer = repl.get_model(model_path)
 
 
 # def summary(r):
@@ -26,9 +20,8 @@ model, tokenizer = repl.get_model(model_path)
 
 
 def ask_wiki(question: str):
-    app.logger.info("Get wikipedia topics")
     results = wikipedia.search(question)[:TOP_N]
-    app.logger.info("Wikipedia topics: %s", results)
+    app.logger.info("Wikipedia articles: %s", results)
 
     summaries = []
     for result in results:
@@ -42,43 +35,60 @@ def ask_wiki(question: str):
     #     )
 
     combined = " ".join(summaries)
-    app.logger.info("Wikipedia summaries combined")
+    app.logger.info("SUCCESS - Wikipedia summaries combined")
     return combined
 
 
 @app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
 def answer_sent():
-    app.logger.info('Answer sent...')
+    app.logger.info("SUCCESS - answer sent")
 
 
-@socketio.on('my_question')
+@socketio.on("my_question")
 def handle_my_question(data):
 
     # Get context
-    app.logger.info("Get context")
-    context = ask_wiki(data["question"])
+    app.logger.info("Attempting to get context...")
+    try:
+        context = ask_wiki(data["question"])
+    except Exception as e:
+        app.logger.error("ERROR - couldn't get context due to: %s", e)
+        context = "No context found"
+    else:
+        app.logger.info("SUCCESS - context loaded")
+
     context = context.split(" ")
 
     # Shorten context
     magic_number = 384 - len(data["question"].split(" ")) - 3
     context = context[:magic_number]
-
     data["context"] = " ".join(context)
 
-    app.logger.info('Question and context received...')
-    app.logger.info('Question: ' + str(data['question']))
-    app.logger.info('Context: ' + str(data['context']))
+    app.logger.info("Question and context received")
+    app.logger.info("Question: " + str(data["question"]))
+    app.logger.info("Context: " + str(data["context"]))
+    app.logger.info("Attempting to get answer...")
 
-    data['answer'] = repl.ask(model, tokenizer, data["question"], data["context"])
+    # Get answer
+    try:
+        data["answer"] = repl.ask(model, tokenizer, data["question"], data["context"])
+    except Exception as e:
+        app.logger.error("ERROR - couldn't get answer due to: %s", e)
+        data["answer"] = "No answer found"
+    else:
+        app.logger.info("SUCCESS - answer found")
 
-    app.logger.info('Answer: ' + str(data['answer']))
-    socketio.emit('Response', data, callback=answer_sent())
+    app.logger.info("Answer: " + str(data["answer"]))
+    socketio.emit("Response", data, callback=answer_sent())
 
 
-if __name__ == '__main__':
-    app.logger.info("Start server...")
+if __name__ == "__main__":
+    app.logger.info("Loading model...")
+    model_path = os.path.join(ROOT_DIR, MODEL_NAME)
+    model, tokenizer = repl.get_model(model_path)
+    app.logger.info("Starting server...")
     socketio.run(app, debug=True)

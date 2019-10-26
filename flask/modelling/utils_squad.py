@@ -158,7 +158,7 @@ def read_squad_examples(input_file, is_training, version_2_with_negative):
                         # Only add answers where the text can be exactly recovered from the
                         # document. If this CAN'T happen it's likely due to weird Unicode
                         # stuff so we will just skip the example.
-                        #
+
                         # Note that this means for training mode, every example is NOT
                         # guaranteed to be preserved.
                         actual_text = " ".join(doc_tokens[start_position:(end_position + 1)])
