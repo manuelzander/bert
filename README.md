@@ -1,12 +1,14 @@
 # BERT Q&A engine
 
-## Getting Started
+## Prerequisites
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### Prerequisites
+The code is run and tested with Python 3.7.4 on macOS 10.14.6.
 
-Clone the repo to your local machine
+### Environment
+
+Clone the repo to your local machine.
 
 Create a virtual environment for Python 3 with:
 
@@ -20,25 +22,23 @@ Activate the virtual environment with:
 source env/bin/activate
 ```
 
-### Installing packages
-
-Then the used Python libraries/packages can be installed with:
+Install the required Python packages with:
 
 ```
 pip install -r requirements.txt
 ```
 
-## Download the model
+### Model
 
 The pre-trained model object can be downloaded from:
 
 https://drive.google.com/open?id=1UbhMvtUeX1LiRA9uDiontnOgqps1ooy5
 
-Please unzip it and replace under ./bert/flask/
+Create a folder ```bert/flask/bert``` and unzip the model in there.
 
-## Run the flask server
+## Running the flask server
 
-Change the line 113 in ./bert/flask/modelling/repl.py to point to the location of the unzipped Bert folder from previous step
+Change line 113 in ```bert/flask/modelling/repl.py``` to point to the location of the unzipped model folder from previous step.
 
 Run ```python flask/main.py```
 
