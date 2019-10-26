@@ -1,20 +1,46 @@
-# BERT HACKATHON
-Bert QA project for internal hackathon
-# Environment setting
-1. Clone the repo to your local machine
-2. Create environment from yaml file by running the command:
-```conda env create -f env.yml```
-3. Activate the new environment in conda:
-```source activate bert-qa-hackathon```
-4. Install PyTorch in the new environment, install instruction -> https://pytorch.org/
+# BERT Q&A engine
 
-It's really a pain to include the torch in the env.yml. 
-# Download the model
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+Clone the repo to your local machine
+
+Create a virtual environment for Python 3 with:
+
+```
+virtualenv -p python3 env
+```
+
+Activate the virtual environment with:
+
+```
+source env/bin/activate
+```
+
+### Installing packages
+
+Then the used Python libraries/packages can be installed with:
+
+```
+pip install -r requirements.txt
+```
+
+Install PyTorch in the same environment, install instructions: https://pytorch.org/
+
+## Download the model
+
 The pre-trained model object can be downloaded from:
+
 https://drive.google.com/open?id=1UbhMvtUeX1LiRA9uDiontnOgqps1ooy5
 
-Please unzip it and replace under ./bert_hackathon/flask/ 
-# Run the web service
-1. change the line 113 in ./bert_hackathon/flask/modelling/repl.py to point to the location of the unzipped Bert folder from previous step
-2. run ```python main.py``` from its directory level
+Please unzip it and replace under ./bert/flask/
+
+## Run the flask server
+
+Change the line 113 in ./bert/flask/modelling/repl.py to point to the location of the unzipped Bert folder from previous step
+
+Run ```python main.py``` inside ./bert/flask
 
