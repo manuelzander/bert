@@ -24,10 +24,7 @@ def ask_wiki(question: str):
     results = wikipedia.search(question, results=NO_ARTICLES)
     app.logger.info("Wikipedia articles: %s", results)
 
-    summaries = []
-    for result in results:
-        summary = wikipedia.summary(result, sentences=NO_SENTENCES)
-        summaries.append(summary)
+    summaries = [wikipedia.summary(result, sentences=NO_SENTENCES) for result in results]
 
     # with Pool(processes=TOP_N) as pool:
     #     summaries = pool.map(
