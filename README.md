@@ -1,6 +1,6 @@
 # BERT Q&A engine
 
-![](https://github.com/manuelzander/bert/workflows/Python%application/badge.svg)
+![](https://github.com/manuelzander/bert/workflows/Python%20application/badge.svg)
 
 ## Prerequisites
 
