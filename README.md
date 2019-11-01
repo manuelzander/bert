@@ -1,5 +1,7 @@
 # BERT Q&A engine
 
+![](https://github.com/manuelzander/bert/workflows/Python%application/badge.svg)
+
 ## Prerequisites
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
