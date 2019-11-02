@@ -30,13 +30,21 @@ Install the required Python packages with:
 pip install -r requirements.txt
 ```
 
+You will also need https://github.com/huggingface/transformers.
+
+Within the ```source``` folder, run:
+
+```
+git clone git@github.com:huggingface/transformers.git
+```
+
 ### Model
 
 The pre-trained model object can be downloaded from:
 
 https://drive.google.com/open?id=1UbhMvtUeX1LiRA9uDiontnOgqps1ooy5
 
-Create a folder ```flask/bert``` and unzip the model in there.
+Create a folder ```source/bert``` and unzip the model in there.
 
 ## Running the flask server
 
