@@ -40,7 +40,10 @@ Create a folder ```flask/bert``` and unzip the model in there.
 
 ## Running the flask server
 
-Change line 113 in ```flask/modelling/repl.py``` to point to the location of the unzipped model folder from previous step.
+Run ```python3 source/main.py``` and open http://127.0.0.1:5000/
 
-Run ```python flask/main.py``` and open http://127.0.0.1:5000/
+If you just want to pass a question and a context to the model, run:
 
+```
+python3 source/modelling/repl.py --question question --context context
+```

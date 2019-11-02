@@ -1,9 +1,9 @@
 # Project related
 *.DS_Store*
-flask/static/*
-flask/bert
-flask/transformers
-flask/*.json
+source/static/*
+source/bert
+source/transformers
+source/*.json
 *.idea/
 
 # Byte-compiled / optimized / DLL files

@@ -1,11 +1,13 @@
 import argparse
+import os
+
 import torch
 from torch.utils.data import TensorDataset, DataLoader
-
 from transformers import BertConfig, BertForQuestionAnswering, BertTokenizer
 
-from .run_squad import to_list
-from .utils_squad import convert_examples_to_features, SquadExample, RawResult, write_predictions
+from source.config import ROOT_DIR, MODEL_NAME
+from source.modelling.run_squad import to_list
+from source.modelling.utils_squad import convert_examples_to_features, SquadExample, RawResult, write_predictions
 
 
 def get_model(model_name):
@@ -110,7 +112,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # load the model and the tokenizer: change to the location of modelling folder
-    model, tokenizer = get_model("/home/patrick/projects/hackathon/berthachathon/modelling")
+    model_path = os.path.join(ROOT_DIR, MODEL_NAME)
+    model, tokenizer = get_model(model_path)
 
     answer = ask(model, tokenizer, args.question, args.context)
     print(answer)

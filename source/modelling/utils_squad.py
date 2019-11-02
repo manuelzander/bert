@@ -17,16 +17,16 @@
 
 from __future__ import absolute_import, division, print_function
 
+import collections
 import json
 import logging
 import math
-import collections
 from io import open
 
 from transformers.tokenization_bert import BasicTokenizer, whitespace_tokenize
 
 # Required by XLNet evaluation method to compute optimal threshold (see write_predictions_extended() method)
-from .utils_squad_evaluate import find_all_best_thresh_v2, make_qid_to_has_ans, get_raw_scores
+from source.modelling.utils_squad_evaluate import find_all_best_thresh_v2, make_qid_to_has_ans, get_raw_scores
 
 logger = logging.getLogger(__name__)
 

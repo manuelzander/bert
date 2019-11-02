@@ -1,13 +1,13 @@
 import logging
-
 # from multiprocessing import Pool
 import os
 
 import wikipedia
-from config import ROOT_DIR, MODEL_NAME, NO_ARTICLES, NO_SENTENCES
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-from modelling import repl
+
+from source.config import ROOT_DIR, MODEL_NAME, NO_ARTICLES, NO_SENTENCES
+from source.modelling import repl
 
 # Flask initialization
 app = Flask(__name__)
