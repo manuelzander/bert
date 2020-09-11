@@ -1,6 +1,6 @@
 # BERT Q&A engine
 
-![](https://github.com/manuelzander/bert/workflows/Python%20application/badge.svg)
+![status](https://img.shields.io/github/workflow/status/manuelzander/bert/Python%20application/master?label=actions&logo=github&style=for-the-badge) ![last-commit](https://img.shields.io/github/last-commit/manuelzander/bert/master?logo=github&style=for-the-badge) ![issues-pr-raw](https://img.shields.io/github/issues-pr-raw/manuelzander/bert?label=open%20prs&logo=github&style=for-the-badge) [![license](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 ## Prerequisites
 
