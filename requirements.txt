@@ -13,7 +13,7 @@ sentencepiece==0.1.83
 sacremoses==0.0.34
 Flask==1.1.1
 Flask-SocketIO==4.2.1
-eventlet==0.25.1
+eventlet==0.31.0
 wikipedia==1.4.0
 torch
 torchvision
